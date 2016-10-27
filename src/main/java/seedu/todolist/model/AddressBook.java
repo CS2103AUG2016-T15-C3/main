@@ -103,16 +103,16 @@ public class AddressBook implements ReadOnlyAddressBook {
         }
     }
     
-    public boolean markTask(ReadOnlyTask key) throws UniqueTaskList.TaskNotFoundException {
-        if (tasks.mark(key)) {
+    public boolean markTask(ReadOnlyTask... keys) throws UniqueTaskList.TaskNotFoundException {
+        if (tasks.mark(keys)) {
             return true;
         } else {
             throw new UniqueTaskList.TaskNotFoundException();
         }
     }
 
-    public boolean removeTask(ReadOnlyTask key) throws UniqueTaskList.TaskNotFoundException {
-        if (tasks.remove(key)) {
+    public boolean removeTask(ReadOnlyTask... keys) throws UniqueTaskList.TaskNotFoundException {
+        if (tasks.remove(keys)) {
             return true;
         } else {
             throw new UniqueTaskList.TaskNotFoundException();

@@ -73,7 +73,7 @@ public class ModelManager extends ComponentManager implements Model {
 
     @Override
     public void resetData(ReadOnlyAddressBook newData) {
-    	addAddressBookHistory(new AddressBook(addressBook));
+    	addressBookHistory.push(new AddressBook(this.addressBook));
     	addressBook.resetData(newData);
         indicateAddressBookChanged();
     }
@@ -83,11 +83,6 @@ public class ModelManager extends ComponentManager implements Model {
         return addressBook;
     }
 
-    @Override
-    public void addAddressBookHistory(ReadOnlyAddressBook previousAddressBook) {
-    	addressBookHistory.push(previousAddressBook);
-    }
-    
     @Override
     public synchronized void undoAddressBook() throws EmptyStackException {
     	addressBook.resetData(addressBookHistory.pop());
@@ -111,14 +106,18 @@ public class ModelManager extends ComponentManager implements Model {
     }
     
     @Override
-    public synchronized void markTask(ReadOnlyTask target) throws TaskNotFoundException {
-        addressBook.markTask(target);
+    public synchronized void markTask(ReadOnlyTask... tasks) throws TaskNotFoundException {
+    	AddressBook previousAddressBook = new AddressBook(this.addressBook);
+    	addressBook.markTask(tasks);
+    	addressBookHistory.push(previousAddressBook);
         indicateAddressBookChanged();
     }
 
     @Override
-    public synchronized void deleteTask(ReadOnlyTask target) throws TaskNotFoundException {
-    	addressBook.removeTask(target);
+    public synchronized void deleteTask(ReadOnlyTask... tasks) throws TaskNotFoundException {
+        AddressBook previousAddressBook = new AddressBook(this.addressBook);
+    	addressBook.removeTask(tasks);
+    	addressBookHistory.push(previousAddressBook);
         indicateAddressBookChanged();
     }
 
@@ -126,7 +125,7 @@ public class ModelManager extends ComponentManager implements Model {
     public synchronized void addTask(Task task) throws UniqueTaskList.DuplicateTaskException {
     	AddressBook previousAddressBook = new AddressBook(this.addressBook);
     	addressBook.addTask(task);
-    	addAddressBookHistory(previousAddressBook);
+    	addressBookHistory.push(previousAddressBook);
         updateFilteredListToShowAll();
         indicateAddressBookChanged();
     }
@@ -135,7 +134,7 @@ public class ModelManager extends ComponentManager implements Model {
     public synchronized void editTask(ReadOnlyTask target, Task replacement) throws TaskNotFoundException {
     	AddressBook previousAddressBook = new AddressBook(this.addressBook);
     	addressBook.editTask(target, replacement);
-    	addAddressBookHistory(previousAddressBook);
+    	addressBookHistory.push(previousAddressBook);
         indicateAddressBookChanged();
     }
 
@@ -171,8 +170,8 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-    public void updateFilteredTaskList(Set<String> keywords){
-        updateFilteredTaskList(new PredicateExpression(new NameQualifier(keywords)));
+    public void updateFilteredTaskList(Set<String> keywords, String findType){
+        updateFilteredTaskList(new PredicateExpression(new NameQualifier(keywords, findType)));
     }
     
     private void updateFilteredTaskList(Expression expression) {
@@ -214,17 +213,33 @@ public class ModelManager extends ComponentManager implements Model {
 
     private class NameQualifier implements Qualifier {
         private Set<String> nameKeyWords;
+        private String findType;
 
-        NameQualifier(Set<String> nameKeyWords) {
+        NameQualifier(Set<String> nameKeyWords, String findType) {
             this.nameKeyWords = nameKeyWords;
+            this.findType = findType;
         }
 
         @Override
         public boolean run(ReadOnlyTask task) {
-            return nameKeyWords.stream()
-                    .filter(keyword -> StringUtil.containsIgnoreCase(task.getName().fullName, keyword))
-                    .findAny()
-                    .isPresent();
+            if (findType.equals("all")) {
+            	for (String keyword : nameKeyWords) {
+            		if (!StringUtil.containsIgnoreCase(task.getName().fullName, keyword)) {
+            			return false;
+            		}
+            	}
+            	return true;
+            }
+            else if (findType.equals("exactly")) {
+            	String keyword = String.join(" ", nameKeyWords).trim().toLowerCase();
+            	return task.getName().fullName.toLowerCase().contains(keyword);
+            }
+            else {
+            	return nameKeyWords.stream()
+            			.filter(keyword -> StringUtil.containsIgnoreCase(task.getName().fullName, keyword))
+            			.findAny()
+            			.isPresent();
+            }
         }
 
         @Override
