@@ -7,6 +7,7 @@ import seedu.todolist.logic.commands.Command;
 import seedu.todolist.logic.commands.CommandResult;
 import seedu.todolist.logic.parser.Parser;
 import seedu.todolist.model.Model;
+import seedu.todolist.model.task.Notification;
 import seedu.todolist.model.task.ReadOnlyTask;
 import seedu.todolist.storage.Storage;
 
@@ -48,6 +49,11 @@ public class LogicManager extends ComponentManager implements Logic {
     @Override
     public ObservableList<ReadOnlyTask> getFilteredIncompleteTaskList() {
         return model.getFilteredIncompleteTaskList();
+    }
+    
+    @Override
+    public ObservableList<Notification> getNotificationList() {
+        return model.getNotificationList();
     }
     
     @Override

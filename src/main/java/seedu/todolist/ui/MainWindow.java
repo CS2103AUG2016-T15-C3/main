@@ -32,6 +32,7 @@ public class MainWindow extends UiPart {
     private Logic logic;
 
     // Independent Ui parts residing in this Ui container
+    private NotificationPanel notificationPanel;
     private TaskListPanel taskListPanel;
     private CompleteTaskListPanel completeTaskListPanel;
     private ResultDisplay resultDisplay;
@@ -54,6 +55,9 @@ public class MainWindow extends UiPart {
 
     @FXML
     private MenuItem helpMenuItem;
+    
+    @FXML
+    private AnchorPane notificationPanelPlaceholder;
 
     @FXML
     private AnchorPane taskListPanelPlaceholder;
@@ -117,7 +121,8 @@ public class MainWindow extends UiPart {
     }
 
     void fillInnerParts() {
-        taskListPanel = TaskListPanel.load(primaryStage, getTaskListPlaceholder(), logic.getFilteredIncompleteTaskList());
+    	notificationPanel = NotificationPanel.load(primaryStage, getNotificationPanelPlaceholder(), logic.getFilteredIncompleteTaskList());
+    	taskListPanel = TaskListPanel.load(primaryStage, getTaskListPlaceholder(), logic.getFilteredIncompleteTaskList());
         completeTaskListPanel = CompleteTaskListPanel.load(primaryStage, getCompleteTaskListPlaceholder(), logic.getFilteredCompleteTaskList());
         resultDisplay = ResultDisplay.load(primaryStage, getResultDisplayPlaceholder());
         statusBarFooter = StatusBarFooter.load(primaryStage, getStatusbarPlaceholder(), config.getAddressBookFilePath());
@@ -134,6 +139,10 @@ public class MainWindow extends UiPart {
 
     private AnchorPane getResultDisplayPlaceholder() {
         return resultDisplayPlaceholder;
+    }
+    
+    public AnchorPane getNotificationPanelPlaceholder() {
+        return notificationPanelPlaceholder;
     }
 
     public AnchorPane getTaskListPlaceholder() {
@@ -203,6 +212,10 @@ public class MainWindow extends UiPart {
             //Default tab is incomplete tab
             
         }
+    }
+    
+    public NotificationPanel getNotificationPanel() {
+        return this.notificationPanel;
     }
 
     public TaskListPanel getTaskListPanel() {

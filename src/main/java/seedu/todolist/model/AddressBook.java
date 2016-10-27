@@ -3,6 +3,8 @@ package seedu.todolist.model;
 import javafx.collections.ObservableList;
 import seedu.todolist.model.tag.Tag;
 import seedu.todolist.model.tag.UniqueTagList;
+import seedu.todolist.model.task.Notification;
+import seedu.todolist.model.task.NotificationList;
 import seedu.todolist.model.task.ReadOnlyTask;
 import seedu.todolist.model.task.Status;
 import seedu.todolist.model.task.Task;
@@ -19,10 +21,12 @@ public class AddressBook implements ReadOnlyAddressBook {
 
     private final UniqueTaskList tasks;
     private final UniqueTagList tags;
+    private NotificationList notifications;
 
     {
         tasks = new UniqueTaskList();
         tags = new UniqueTagList();
+        notifications = new NotificationList();
     }
 
     public AddressBook() {}
@@ -60,6 +64,10 @@ public class AddressBook implements ReadOnlyAddressBook {
         return tasks.getFilteredTaskList(Status.STATUS_INCOMPLETE);
     }
     //@@author
+    
+    public ObservableList<Notification> getNotifications() {
+        return notifications.getNotificationList();
+    }
 
     public void setTasks(List<Task> tasks) {
         this.tasks.getInternalList().setAll(tasks);

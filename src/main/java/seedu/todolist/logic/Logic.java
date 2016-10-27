@@ -2,6 +2,7 @@ package seedu.todolist.logic;
 
 import javafx.collections.ObservableList;
 import seedu.todolist.logic.commands.CommandResult;
+import seedu.todolist.model.task.Notification;
 import seedu.todolist.model.task.ReadOnlyTask;
 
 /**
@@ -23,6 +24,9 @@ public interface Logic {
     
     /** Returns the filtered incomplete list of tasks */
     ObservableList<ReadOnlyTask> getFilteredIncompleteTaskList();
+    
+    /** Returns the notification list */
+    ObservableList<Notification> getNotificationList();
     
     void setCurrentTab(String tab);
 

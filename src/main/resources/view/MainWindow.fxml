@@ -43,7 +43,7 @@
 			</padding>
 		</AnchorPane>
 		<!-- @@author A0138601M -->
-		<SplitPane id="splitPane" fx:id="splitPane" dividerPositions="0.3" VBox.vgrow="ALWAYS">
+		<SplitPane id="splitPane" dividerPositions="0.3" VBox.vgrow="ALWAYS">
 			<items>
 				<SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
 					<items>
@@ -52,7 +52,7 @@
 								<Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
 							</padding>
 							<content>
-								<AnchorPane fx:id="notificationPlaceHolder" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+								<AnchorPane fx:id="notificationPanelPlaceholder" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
 							</content>
 						</TitledPane>
 						<TitledPane animated="false" collapsible="false" text="Overdue">

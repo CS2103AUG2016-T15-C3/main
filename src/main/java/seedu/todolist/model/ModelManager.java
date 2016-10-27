@@ -6,6 +6,7 @@ import seedu.todolist.commons.core.LogsCenter;
 import seedu.todolist.commons.core.UnmodifiableObservableList;
 import seedu.todolist.commons.events.model.AddressBookChangedEvent;
 import seedu.todolist.commons.util.StringUtil;
+import seedu.todolist.model.task.Notification;
 import seedu.todolist.model.task.ReadOnlyTask;
 import seedu.todolist.model.task.Task;
 import seedu.todolist.model.task.UniqueTaskList;
@@ -30,6 +31,7 @@ public class ModelManager extends ComponentManager implements Model {
     private final FilteredList<Task> filteredAllTasks;
     private final FilteredList<Task> filteredCompleteTasks;
     private final FilteredList<Task> filteredIncompleteTasks;
+    private final FilteredList<Notification> notifications;
     
     private final Stack<ReadOnlyAddressBook> addressBookHistory;
     
@@ -50,6 +52,7 @@ public class ModelManager extends ComponentManager implements Model {
         filteredAllTasks = new FilteredList<>(addressBook.getAllTasks());
         filteredCompleteTasks = new FilteredList<>(addressBook.getCompletedTasks());
         filteredIncompleteTasks = new FilteredList<>(addressBook.getIncompleteTasks());
+        notifications = new FilteredList<>(addressBook.getNotifications());
         addressBookHistory = new Stack<ReadOnlyAddressBook>();
         currentTab = MainWindow.TAB_TASK_INCOMPLETE;
     }
@@ -63,6 +66,7 @@ public class ModelManager extends ComponentManager implements Model {
         filteredAllTasks = new FilteredList<>(addressBook.getAllTasks());
         filteredCompleteTasks = new FilteredList<>(addressBook.getCompletedTasks());
         filteredIncompleteTasks = new FilteredList<>(addressBook.getIncompleteTasks());
+        notifications = new FilteredList<>(addressBook.getNotifications());
         addressBookHistory = new Stack<ReadOnlyAddressBook>();
         currentTab = MainWindow.TAB_TASK_INCOMPLETE;
     }
@@ -153,6 +157,11 @@ public class ModelManager extends ComponentManager implements Model {
         return new UnmodifiableObservableList<>(filteredIncompleteTasks);
     }
     //@@author
+    
+    @Override
+    public UnmodifiableObservableList<Notification> getNotificationList() {
+        return new UnmodifiableObservableList<>(notifications);
+    }
 
     @Override
     public void updateFilteredListToShowAll() {

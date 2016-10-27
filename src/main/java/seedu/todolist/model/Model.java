@@ -1,6 +1,7 @@
 package seedu.todolist.model;
 
 import seedu.todolist.commons.core.UnmodifiableObservableList;
+import seedu.todolist.model.task.Notification;
 import seedu.todolist.model.task.ReadOnlyTask;
 import seedu.todolist.model.task.Task;
 import seedu.todolist.model.task.UniqueTaskList;
@@ -44,6 +45,9 @@ public interface Model {
     
     /** Returns the filtered incomplete task list as an {@code UnmodifiableObservableList<ReadOnlyTask>} */
     UnmodifiableObservableList<ReadOnlyTask> getFilteredIncompleteTaskList();
+    
+    /** Returns the notification list as an {@code UnmodifiableObservableList<Notification>} */
+    UnmodifiableObservableList<Notification> getNotificationList();
 
     /** Updates the filter of the filtered task list to show all tasks */
     void updateFilteredListToShowAll();
