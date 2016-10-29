@@ -1,6 +1,5 @@
 package seedu.todolist.logic.commands;
 
-//@@author A0158963M 
 /**
  * Sets the location of the storage file. 
  */
