@@ -45,11 +45,11 @@ public class MainApp extends Application {
 
     @Override
     public void init() throws Exception {
-        logger.info("=============================[ Initializing ToDoList ]===========================");
+        logger.info("=============================[ Initializing AddressBook ]===========================");
         super.init();
 
         config = initConfig(getApplicationParameter("config"));
-        storage = new StorageManager(config.getToDoListFilePath(), config.getUserPrefsFilePath());
+        storage = new StorageManager(config.getAddressBookFilePath(), config.getUserPrefsFilePath());
 
         userPrefs = initPrefs(config);
 
@@ -70,20 +70,20 @@ public class MainApp extends Application {
     }
 
     private Model initModelManager(Storage storage, UserPrefs userPrefs) {
-        Optional<ReadOnlyToDoList> ToDoListOptional;
-        ReadOnlyToDoList initialData;
+        Optional<ReadOnlyAddressBook> addressBookOptional;
+        ReadOnlyAddressBook initialData;
         try {
-            ToDoListOptional = storage.readToDoList();
-            if(!ToDoListOptional.isPresent()){
-                logger.info("Data file not found. Will be starting with an empty ToDoList");
+            addressBookOptional = storage.readAddressBook();
+            if(!addressBookOptional.isPresent()){
+                logger.info("Data file not found. Will be starting with an empty AddressBook");
             }
-            initialData = ToDoListOptional.orElse(new ToDoList());
+            initialData = addressBookOptional.orElse(new AddressBook());
         } catch (DataConversionException e) {
-            logger.warning("Data file not in the correct format. Will be starting with an empty ToDoList");
-            initialData = new ToDoList();
+            logger.warning("Data file not in the correct format. Will be starting with an empty AddressBook");
+            initialData = new AddressBook();
         } catch (FileNotFoundException e) {
-            logger.warning("Problem while reading from the file. . Will be starting with an empty ToDoList");
-            initialData = new ToDoList();
+            logger.warning("Problem while reading from the file. . Will be starting with an empty AddressBook");
+            initialData = new AddressBook();
         }
 
         return new ModelManager(initialData, userPrefs);
@@ -139,7 +139,7 @@ public class MainApp extends Application {
                     "Using default user prefs");
             initializedPrefs = new UserPrefs();
         } catch (IOException e) {
-            logger.warning("Problem while reading from the file. . Will be starting with an empty ToDoList");
+            logger.warning("Problem while reading from the file. . Will be starting with an empty AddressBook");
             initializedPrefs = new UserPrefs();
         }
 
@@ -159,7 +159,7 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        logger.info("Starting ToDoList " + MainApp.VERSION);
+        logger.info("Starting AddressBook " + MainApp.VERSION);
         ui.start(primaryStage);
     }
 

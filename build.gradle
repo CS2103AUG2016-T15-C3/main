@@ -74,7 +74,7 @@ allprojects {
     }
     
     shadowJar {
-        archiveName = "ToDoList.jar"
+        archiveName = "addressbook.jar"
 
         manifest {
             attributes "Main-Class": "seedu.address.MainApp"
@@ -113,8 +113,8 @@ tasks.coveralls {
     onlyIf { System.env.'CI' }
 }
 
-class ToDoListTest extends Test {
-    public ToDoListTest() {
+class AddressBookTest extends Test {
+    public AddressBookTest() {
     	  forkEvery = 1
         systemProperty 'testfx.setup.timeout', '60000'
     }
@@ -128,7 +128,7 @@ class ToDoListTest extends Test {
     }
 }
 
-task guiTests(type: ToDoListTest) {
+task guiTests(type: AddressBookTest) {
     include 'guitests/**'
 
     jacoco {
@@ -137,7 +137,7 @@ task guiTests(type: ToDoListTest) {
 }
 
 
-task nonGuiTests(type: ToDoListTest) {
+task nonGuiTests(type: AddressBookTest) {
     include 'seedu/address/**'
 
     jacoco {
@@ -146,7 +146,7 @@ task nonGuiTests(type: ToDoListTest) {
 }
 
 // Test mode depends on whether headless task has been run
-task allTests(type: ToDoListTest) {
+task allTests(type: AddressBookTest) {
     jacoco {
         destinationFile = new File("${buildDir}/jacoco/test.exec")
     }

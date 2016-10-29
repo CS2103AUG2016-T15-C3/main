@@ -11,7 +11,7 @@ import seedu.todolist.logic.commands.ListCommand;
 import seedu.todolist.model.task.TaskDate;
 
 //@@author A0153736B
-public class ListCommandTest extends ToDoListGuiTest {
+public class ListCommandTest extends AddressBookGuiTest {
 
 	@Test
 	public void listAll() {

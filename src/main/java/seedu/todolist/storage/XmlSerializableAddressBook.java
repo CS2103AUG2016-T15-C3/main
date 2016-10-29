@@ -1,7 +1,7 @@
 package seedu.todolist.storage;
 
 import seedu.todolist.commons.exceptions.IllegalValueException;
-import seedu.todolist.model.ReadOnlyToDoList;
+import seedu.todolist.model.ReadOnlyAddressBook;
 import seedu.todolist.model.tag.Tag;
 import seedu.todolist.model.tag.UniqueTagList;
 import seedu.todolist.model.task.ReadOnlyTask;
@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * An Immutable ToDoList that is serializable to XML format
+ * An Immutable AddressBook that is serializable to XML format
  */
-@XmlRootElement(name = "ToDoList")
-public class XmlSerializableToDoList implements ReadOnlyToDoList {
+@XmlRootElement(name = "addressbook")
+public class XmlSerializableAddressBook implements ReadOnlyAddressBook {
 
     @XmlElement
     private List<XmlAdaptedTask> tasks;
@@ -33,12 +33,12 @@ public class XmlSerializableToDoList implements ReadOnlyToDoList {
     /**
      * Empty constructor required for marshalling
      */
-    public XmlSerializableToDoList() {}
+    public XmlSerializableAddressBook() {}
 
     /**
      * Conversion
      */
-    public XmlSerializableToDoList(ReadOnlyToDoList src) {
+    public XmlSerializableAddressBook(ReadOnlyAddressBook src) {
         tasks.addAll(src.getTaskList().stream().map(XmlAdaptedTask::new).collect(Collectors.toList()));
         tags = src.getTagList();
     }

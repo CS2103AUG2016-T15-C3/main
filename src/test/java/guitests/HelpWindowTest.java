@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class HelpWindowTest extends ToDoListGuiTest {
+public class HelpWindowTest extends AddressBookGuiTest {
 
     @Test
     public void openHelpWindow() {

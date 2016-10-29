@@ -24,7 +24,7 @@ public class UndoCommand extends Command {
     public CommandResult execute() {
         assert model != null; 
         try {
-            model.undoToDoList();
+            model.undoAddressBook();
             return new CommandResult(MESSAGE_SUCCESS);	
         } catch (EmptyStackException ese) {
             return new CommandResult(MESSAGE_WITHOUT_PREVIOUS_OPERATION);

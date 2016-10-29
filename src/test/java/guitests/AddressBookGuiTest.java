@@ -13,7 +13,7 @@ import seedu.task.TestApp;
 import seedu.task.testutil.TestUtil;
 import seedu.task.testutil.TypicalTestTasks;
 import seedu.todolist.commons.core.EventsCenter;
-import seedu.todolist.model.ToDoList;
+import seedu.todolist.model.AddressBook;
 import seedu.todolist.model.task.ReadOnlyTask;
 
 import java.util.concurrent.TimeoutException;
@@ -22,9 +22,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * A GUI Test class for ToDoList.
+ * A GUI Test class for AddressBook.
  */
-public abstract class ToDoListGuiTest {
+public abstract class AddressBookGuiTest {
 
     /* The TestName Rule makes the current test name available inside test methods */
     @Rule
@@ -78,9 +78,9 @@ public abstract class ToDoListGuiTest {
      * Override this in child classes to set the initial local data.
      * Return null to use the data in the file specified in {@link #getDataFileLocation()}
      */
-    protected ToDoList getInitialData() {
-        ToDoList ab = TestUtil.generateEmptyToDoList();
-        TypicalTestTasks.loadToDoListWithSampleData(ab);
+    protected AddressBook getInitialData() {
+        AddressBook ab = TestUtil.generateEmptyAddressBook();
+        TypicalTestTasks.loadAddressBookWithSampleData(ab);
         return ab;
     }
 

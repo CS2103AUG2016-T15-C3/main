@@ -4,7 +4,7 @@ import javafx.collections.transformation.FilteredList;
 import seedu.todolist.commons.core.ComponentManager;
 import seedu.todolist.commons.core.LogsCenter;
 import seedu.todolist.commons.core.UnmodifiableObservableList;
-import seedu.todolist.commons.events.model.ToDoListChangedEvent;
+import seedu.todolist.commons.events.model.AddressBookChangedEvent;
 import seedu.todolist.commons.util.StringUtil;
 import seedu.todolist.model.parser.DateParser;
 import seedu.todolist.model.task.ReadOnlyTask;
@@ -28,72 +28,72 @@ import java.util.logging.Logger;
 public class ModelManager extends ComponentManager implements Model {
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
 
-    private final ToDoList ToDoList;
+    private final AddressBook addressBook;
     
     private final FilteredList<Task> filteredAllTasks;
     private final FilteredList<Task> filteredCompleteTasks;
     private final FilteredList<Task> filteredIncompleteTasks;
     
-    private final Stack<ReadOnlyToDoList> ToDoListHistory;
+    private final Stack<ReadOnlyAddressBook> addressBookHistory;
     
     private String currentTab;
 
     /**
-     * Initializes a ModelManager with the given ToDoList
-     * ToDoList and its variables should not be null
+     * Initializes a ModelManager with the given AddressBook
+     * AddressBook and its variables should not be null
      */
-    public ModelManager(ToDoList src, UserPrefs userPrefs) {
+    public ModelManager(AddressBook src, UserPrefs userPrefs) {
         super();
         assert src != null;
         assert userPrefs != null;
 
         logger.fine("Initializing with address book: " + src + " and user prefs " + userPrefs);
 
-        ToDoList = new ToDoList(src);
-        filteredAllTasks = new FilteredList<>(ToDoList.getAllTasks());
-        filteredCompleteTasks = new FilteredList<>(ToDoList.getCompletedTasks());
-        filteredIncompleteTasks = new FilteredList<>(ToDoList.getIncompleteTasks());
-        ToDoListHistory = new Stack<ReadOnlyToDoList>();
+        addressBook = new AddressBook(src);
+        filteredAllTasks = new FilteredList<>(addressBook.getAllTasks());
+        filteredCompleteTasks = new FilteredList<>(addressBook.getCompletedTasks());
+        filteredIncompleteTasks = new FilteredList<>(addressBook.getIncompleteTasks());
+        addressBookHistory = new Stack<ReadOnlyAddressBook>();
         currentTab = MainWindow.TAB_TASK_INCOMPLETE;
     }
 
     public ModelManager() {
-        this(new ToDoList(), new UserPrefs());
+        this(new AddressBook(), new UserPrefs());
     }
 
-    public ModelManager(ReadOnlyToDoList initialData, UserPrefs userPrefs) {
-        ToDoList = new ToDoList(initialData);
-        filteredAllTasks = new FilteredList<>(ToDoList.getAllTasks());
-        filteredCompleteTasks = new FilteredList<>(ToDoList.getCompletedTasks());
-        filteredIncompleteTasks = new FilteredList<>(ToDoList.getIncompleteTasks());
-        ToDoListHistory = new Stack<ReadOnlyToDoList>();
+    public ModelManager(ReadOnlyAddressBook initialData, UserPrefs userPrefs) {
+        addressBook = new AddressBook(initialData);
+        filteredAllTasks = new FilteredList<>(addressBook.getAllTasks());
+        filteredCompleteTasks = new FilteredList<>(addressBook.getCompletedTasks());
+        filteredIncompleteTasks = new FilteredList<>(addressBook.getIncompleteTasks());
+        addressBookHistory = new Stack<ReadOnlyAddressBook>();
         currentTab = MainWindow.TAB_TASK_INCOMPLETE;
     }
 
     @Override
-    public void resetData(ReadOnlyToDoList newData) {
-    	ToDoListHistory.push(new ToDoList(this.ToDoList));
-    	ToDoList.resetData(newData);
-        indicateToDoListChanged();
+    public void resetData(ReadOnlyAddressBook newData) {
+    	addressBookHistory.push(new AddressBook(this.addressBook));
+    	addressBook.resetData(newData);
+        indicateAddressBookChanged();
     }
 
     @Override
-    public ReadOnlyToDoList getToDoList() {
-        return ToDoList;
+    public ReadOnlyAddressBook getAddressBook() {
+        return addressBook;
     }
 
     //@@author A0153736B
     @Override
-    public synchronized void undoToDoList() throws EmptyStackException {
-    	ToDoList.resetData(ToDoListHistory.pop());
+    public synchronized void undoAddressBook() throws EmptyStackException {
+    	addressBook.resetData(addressBookHistory.pop());
     	updateFilteredListToShowAll();
-    	indicateToDoListChanged();
+    	indicateAddressBookChanged();
     }
     //@@author
     
     /** Raises an event to indicate the model has changed */
-    private void indicateToDoListChanged() {
-        raise(new ToDoListChangedEvent(ToDoList));
+    private void indicateAddressBookChanged() {
+        raise(new AddressBookChangedEvent(addressBook));
     }
     
     
@@ -109,36 +109,36 @@ public class ModelManager extends ComponentManager implements Model {
     
     @Override
     public synchronized void markTask(ReadOnlyTask... tasks) throws TaskNotFoundException {
-    	ToDoList previousToDoList = new ToDoList(this.ToDoList);
-    	ToDoList.markTask(tasks);
-    	ToDoListHistory.push(previousToDoList);
-        indicateToDoListChanged();
+    	AddressBook previousAddressBook = new AddressBook(this.addressBook);
+    	addressBook.markTask(tasks);
+    	addressBookHistory.push(previousAddressBook);
+        indicateAddressBookChanged();
     }
 
     @Override
     public synchronized void deleteTask(ReadOnlyTask... tasks) throws TaskNotFoundException {
-        ToDoList previousToDoList = new ToDoList(this.ToDoList);
-    	ToDoList.removeTask(tasks);
-    	ToDoListHistory.push(previousToDoList);
-        indicateToDoListChanged();
+        AddressBook previousAddressBook = new AddressBook(this.addressBook);
+    	addressBook.removeTask(tasks);
+    	addressBookHistory.push(previousAddressBook);
+        indicateAddressBookChanged();
     }
 
     @Override
     public synchronized void addTask(Task task) throws UniqueTaskList.DuplicateTaskException {
-    	ToDoList previousToDoList = new ToDoList(this.ToDoList);
-    	ToDoList.addTask(task);
-    	ToDoListHistory.push(previousToDoList);
+    	AddressBook previousAddressBook = new AddressBook(this.addressBook);
+    	addressBook.addTask(task);
+    	addressBookHistory.push(previousAddressBook);
         updateFilteredListToShowAll();
-        indicateToDoListChanged();
+        indicateAddressBookChanged();
     }
     
     @Override
     //@author A0146682X
     public synchronized void editTask(ReadOnlyTask target, Task replacement) throws TaskNotFoundException {
-    	ToDoList previousToDoList = new ToDoList(this.ToDoList);
-    	ToDoList.editTask(target, replacement);
-    	ToDoListHistory.push(previousToDoList);
-        indicateToDoListChanged();
+    	AddressBook previousAddressBook = new AddressBook(this.addressBook);
+    	addressBook.editTask(target, replacement);
+    	addressBookHistory.push(previousAddressBook);
+        indicateAddressBookChanged();
     }
     //@author
 

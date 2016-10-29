@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * Wraps all data at the address-book level
  * Duplicates are not allowed (by .equals comparison)
  */
-public class ToDoList implements ReadOnlyToDoList {
+public class AddressBook implements ReadOnlyAddressBook {
 
     private final UniqueTaskList tasks;
     private final UniqueTagList tags;
@@ -25,24 +25,24 @@ public class ToDoList implements ReadOnlyToDoList {
         tags = new UniqueTagList();
     }
 
-    public ToDoList() {}
+    public AddressBook() {}
 
     /**
      * Tasks and Tags are copied into this to-do list
      */
-    public ToDoList(ReadOnlyToDoList toBeCopied) {
+    public AddressBook(ReadOnlyAddressBook toBeCopied) {
         this(toBeCopied.getUniqueTaskList(), toBeCopied.getUniqueTagList());
     }
 
     /**
      * Tasks and Tags are copied into this to-do list
      */
-    public ToDoList(UniqueTaskList tasks, UniqueTagList tags) {
+    public AddressBook(UniqueTaskList tasks, UniqueTagList tags) {
         resetData(tasks.getInternalList(), tags.getInternalList());
     }
 
-    public static ReadOnlyToDoList getEmptyToDoList() {
-        return new ToDoList();
+    public static ReadOnlyAddressBook getEmptyAddressBook() {
+        return new AddressBook();
     }
 
 //// list overwrite operations
@@ -74,7 +74,7 @@ public class ToDoList implements ReadOnlyToDoList {
         setTags(newTags);
     }
 
-    public void resetData(ReadOnlyToDoList newData) {
+    public void resetData(ReadOnlyAddressBook newData) {
         resetData(newData.getTaskList(), newData.getTagList());
     }
 
@@ -146,9 +146,9 @@ public class ToDoList implements ReadOnlyToDoList {
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
-                || (other instanceof ToDoList // instanceof handles nulls
-                && this.tasks.equals(((ToDoList) other).tasks)
-                && this.tags.equals(((ToDoList) other).tags));
+                || (other instanceof AddressBook // instanceof handles nulls
+                && this.tasks.equals(((AddressBook) other).tasks)
+                && this.tags.equals(((AddressBook) other).tags));
     }
 
     @Override

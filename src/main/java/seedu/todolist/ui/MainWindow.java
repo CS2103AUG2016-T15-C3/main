@@ -44,7 +44,7 @@ public class MainWindow extends UiPart {
     private VBox rootLayout;
     private Scene scene;
 
-    private String ToDoListName;
+    private String addressBookName;
 
     @FXML
     private AnchorPane browserPlaceholder;
@@ -88,16 +88,16 @@ public class MainWindow extends UiPart {
     public static MainWindow load(Stage primaryStage, Config config, UserPrefs prefs, Logic logic) {
 
         MainWindow mainWindow = UiPartLoader.loadUiPart(primaryStage, new MainWindow());
-        mainWindow.configure(config.getAppTitle(), config.getToDoListName(), config, prefs, logic);
+        mainWindow.configure(config.getAppTitle(), config.getAddressBookName(), config, prefs, logic);
         return mainWindow;
     }
 
-    private void configure(String appTitle, String ToDoListName, Config config, UserPrefs prefs,
+    private void configure(String appTitle, String addressBookName, Config config, UserPrefs prefs,
                            Logic logic) {
 
         //Set dependencies
         this.logic = logic;
-        this.ToDoListName = ToDoListName;
+        this.addressBookName = addressBookName;
         this.config = config;
         this.userPrefs = prefs;
 
@@ -120,7 +120,7 @@ public class MainWindow extends UiPart {
         taskListPanel = TaskListPanel.load(primaryStage, getTaskListPlaceholder(), logic.getFilteredIncompleteTaskList());
         completeTaskListPanel = CompleteTaskListPanel.load(primaryStage, getCompleteTaskListPlaceholder(), logic.getFilteredCompleteTaskList());
         resultDisplay = ResultDisplay.load(primaryStage, getResultDisplayPlaceholder());
-        statusBarFooter = StatusBarFooter.load(primaryStage, getStatusbarPlaceholder(), config.getToDoListFilePath());
+        statusBarFooter = StatusBarFooter.load(primaryStage, getStatusbarPlaceholder(), config.getAddressBookFilePath());
         commandBox = CommandBox.load(primaryStage, getCommandBoxPlaceholder(), resultDisplay, logic);
     }
 
