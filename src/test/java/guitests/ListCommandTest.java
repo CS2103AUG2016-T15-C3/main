@@ -19,11 +19,11 @@ public class ListCommandTest extends ToDoListGuiTest {
 		assertFindCommandSuccess("list", currentList);
 	}
 	
-	@Test
-	public void listToday() {
-		TestTaskList currentList = new TestTaskList(new TestTask[] {td.eventWithoutParameters});
-		assertFindCommandSuccess("list today", currentList);
-	}
+//	@Test
+//	public void listToday() {
+//		TestTaskList currentList = new TestTaskList(new TestTask[] {td.eventWithoutParameters});
+//		assertFindCommandSuccess("list today", currentList);
+//	}
 	
 	@Test
 	public void listWeek() {
