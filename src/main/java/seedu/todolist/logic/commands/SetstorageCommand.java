@@ -1,5 +1,6 @@
 package seedu.todolist.logic.commands;
 
+
 /**
  * Sets the location of the storage file. 
  */
@@ -25,7 +26,7 @@ public static final String COMMAND_WORD = "setstorage";
     @Override
 	public CommandResult execute() {
 		storage.setFilePath(filepath);
-    	return new CommandResult(MESSAGE_SUCCESS);
+		return new CommandResult(MESSAGE_SUCCESS);
 	}
 	
 
