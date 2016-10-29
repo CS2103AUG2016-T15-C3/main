@@ -87,9 +87,7 @@ public class ToDoList implements ReadOnlyToDoList {
         tasks.add(p);
     }
     
-    //@@author A0146682X
-    /**
-     * Edits a task in the to-do list
+    /**@author A0146682X
      */
     public boolean editTask(ReadOnlyTask key, Task replacement) throws UniqueTaskList.TaskNotFoundException {
         if (tasks.edit(key, replacement)) {
