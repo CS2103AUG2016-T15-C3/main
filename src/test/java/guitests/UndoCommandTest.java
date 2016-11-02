@@ -10,7 +10,8 @@ import seedu.task.testutil.TestUtil;
 import seedu.todolist.commons.core.Messages;
 import seedu.todolist.logic.commands.UndoCommand;
 
-public class UndoCommandTest extends AddressBookGuiTest {
+//@@author A0153736B
+public class UndoCommandTest extends ToDoListGuiTest {
 
     /**
      * 
@@ -43,13 +44,13 @@ public class UndoCommandTest extends AddressBookGuiTest {
         commandBox.runCommand("clear");	
               
         //undo a clear operation
-        currentList.markTasksFromList(new TestTask[] {td.eventWithoutParameters});
+        currentList.markTasksFromList(new TestTask[] {td.eventWithoutParameter});
         currentList.removeTasksFromList(new TestTask[] {td.eventWithLocation}, true);
         assertUndoCommandSuccess(currentList);
         
         //undo a delete operation
         currentList = new TestTaskList(td.getTypicalTasks());
-        currentList.markTasksFromList(new TestTask[] {td.eventWithoutParameters});
+        currentList.markTasksFromList(new TestTask[] {td.eventWithoutParameter});
         assertUndoCommandSuccess(currentList);
         
         //undo a done operation

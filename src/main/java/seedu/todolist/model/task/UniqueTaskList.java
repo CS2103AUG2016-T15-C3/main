@@ -101,6 +101,7 @@ public class UniqueTaskList implements Iterable<Task> {
     }
     //@@author
     
+    //@@author A0146682X
     /**
      * Edits the equivalent task in the list.
      *

@@ -19,12 +19,12 @@ public class UndoCommand extends Command {
 
     public UndoCommand() {}
 
-
+    //@@author A0153736B
     @Override
     public CommandResult execute() {
         assert model != null; 
         try {
-            model.undoAddressBook();
+            model.undoToDoList();
             return new CommandResult(MESSAGE_SUCCESS);	
         } catch (EmptyStackException ese) {
             return new CommandResult(MESSAGE_WITHOUT_PREVIOUS_OPERATION);

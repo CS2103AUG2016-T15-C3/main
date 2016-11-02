@@ -13,7 +13,9 @@ import seedu.todolist.model.task.Task;
 import seedu.todolist.model.task.TaskDate;
 import seedu.todolist.model.task.TaskTime;
 import seedu.todolist.model.task.UniqueTaskList.TaskNotFoundException;
+import seedu.todolist.ui.MainWindow;
 
+//@@author A0146682X
 /**
  * Edits the information of an existing task.
  */
@@ -23,7 +25,7 @@ public class EditCommand extends Command {
 	public static final String COMMAND_WORD = "edit";
 
 	public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits a task in the list displayed. "
-			+ "Parameters: [index] NAME [from DATETIME] [to DATETIME] [at LOCATION] [remarks REMARKS] \n"
+			+ "Parameters: [index] [NAME] [from DATETIME] [to DATETIME] [at LOCATION] [remarks REMARKS] \n"
 			+ "Example: " + COMMAND_WORD
 			+ " 1 dinner with mom from 13 oct 2016 7pm to 13 oct 2016 8pm at home remarks buy fruits";
 
@@ -54,17 +56,28 @@ public class EditCommand extends Command {
 
 	@Override
 	public CommandResult execute() {
-
-		UnmodifiableObservableList<ReadOnlyTask> lastShownList = model.getFilteredAllTaskList();
-
-		if (lastShownList.size() < targetIndex) {
+		
+		UnmodifiableObservableList<ReadOnlyTask> lastShownList;
+        
+        if (model.getCurrentTab().equals(MainWindow.TAB_TASK_COMPLETE)) {
+            lastShownList = model.getFilteredCompleteTaskList();
+        }
+        else {
+            lastShownList = model.getFilteredIncompleteTaskList();
+        }
+        
+		if (targetIndex < 1 || lastShownList.size() < targetIndex) {
 			indicateAttemptToExecuteIncorrectCommand();
 			return new CommandResult(Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
 		}
 
 		ReadOnlyTask taskToEdit = lastShownList.get(targetIndex - 1);
 
-		if(name==null) name = taskToEdit.getName().toString();
+		name = name.trim();
+		
+		if(name==null) {
+			name = taskToEdit.getName().toString();
+		}
 
 		Interval originalInterval = taskToEdit.getInterval();
 
@@ -90,14 +103,14 @@ public class EditCommand extends Command {
 		Task replacement;
 		try {
 			replacement = new Task(
-					new Name(name),
+					new Name(name), 
 					new Interval(startDate, startTime, endDate, endTime),
 					new Location(location),
 					new Remarks(remarks),
 					new Status(originalStatus.toString())
 					);
 		} catch (IllegalValueException ive) {
-			return new CommandResult(String.format(ive.getMessage()));
+			return new CommandResult(ive.getMessage());
 		}
 
 		try {

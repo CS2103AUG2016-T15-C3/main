@@ -32,10 +32,12 @@
 ### Viewing help : `help`
 Format: **`help`**
 > Help is also shown if you enter an incorrect command e.g. `abcd`
- 
+
+<!-- @@author A0138601M -->
+
 ### Adding a task : `add`
 Add a task to Task!t.<br>
-Format: **`add`**` [task_name] [time parameter] [optional parameter 1] [optional parameter 2]...`<br>
+Format: **`add`**` [task_name] [optional parameter 1] [optional parameter 2]...`<br>
  
 > ##### Time parameter
 > One of the following parameters must be appended to the add command. <br>
@@ -45,6 +47,7 @@ Format: **`add`**` [task_name] [time parameter] [optional parameter 1] [optional
 > Format: **`from`**` [datetime] `**`to`**` [datetime]`<br>
 
 > > The date for **`from`** can be omitted if it is on the same ending date. <br>
+<!-- @@author A0146682X -->
 > > A few variations in [datetime] format are accepted: <br>
 > > - Both 24-Hour and AM/PM formats are accepted: <br>
 > > E.g. 19:30 12 oct 2016 <br>
@@ -62,7 +65,7 @@ Format: **`add`**` [task_name] [time parameter] [optional parameter 1] [optional
 > > E.g. 19:30 12/10 <br> 
 > > E.g. 7:30 pm 12/10 <br> 
 
-
+<!-- @@author A0138601M -->
 > Examples:
 > * **`add`**` dinner with mom `**`from`**` 19:30 02 oct 2016 `**`to`**` 20:30 02 oct 2016`
 > * **`add`**` dinner with mom `**`from`**` 19:30 `**`to`**` 20:30 02 oct 2016`
@@ -95,7 +98,7 @@ Format: **`add`**` [task_name] [time parameter] [optional parameter 1] [optional
 
 Examples:
 * **`add`**` Prepare meeting agenda `**`by`**` 11:00 7 oct 2016`
-* **`add`**` Jimmy's wedding banquet `**`from`**` 19:00 `**`to`**` 22:00 11 nov 2016` `**`at`**` Trinity Church
+* **`add`**` Jimmy's wedding banquet `**`from`**` 19:00 `**`to`**` 22:00 11 nov 2016` **`at`**` Trinity Church`
 
 ### Listing all tasks : `list`
 Shows the list of all tasks sorted temporally with the most recent ones displayed first.<br>
@@ -105,15 +108,14 @@ Format: **`list`**` [filter]`<br>
 > * week - shows the list of tasks for this week
 > * month - shows the list of tasks for the current month
 > * date (e.g. 12 Oct 2016) - shows the list of tasks for the specified date
-> * completed - shows a list of tasks that were mark as done.
 
 Examples:
 * **`list`**` today`
 * **`list`**` 12 Oct 2016`
-
+<!-- @@author A0146682X -->
 ### Finding all tasks containing keyword in the name: `find`
 Finds tasks whose names contain any of the given keywords.<br>
-Format: **`find`**` [keywords]`
+Format: **`find`**` [findtype] [keywords]`
 
 > The search is case insensitive. <br>
 > the order of the keywords does not matter. <br>
@@ -144,7 +146,7 @@ Examples:
 > Examples:
 > * `find exactly mom and dad` <br>
 > Returns `dinner with mom and dad` but not `dinner with mom`
-
+<!-- @@author A0138601M -->
 ### Deleting a task : `delete`
 Delete the specified tasks from the to-do list.<br>
 Format: **`delete`**` [index 1,index 2,...]`
@@ -187,6 +189,7 @@ Format: **`edit`**` [index] [optional parameter 1] [optional parameter 2]...`
 > [optional parameter] follows the format in **`add`** command. <br>
 > The index refers to the index number shown in the most recent listing.<br>
 > The index **must be a positive integer** 1, 2, 3, ... <br>
+<!-- @@author A0146682X -->
 > Leaving the detail blank after entering a parameter identifier deletes the parameter. <br>
 
 Examples: 
@@ -199,8 +202,8 @@ Examples:
 * **`find`**` dinner` <br> 
   **`edit`**` 1 `**`at`**<br>
   Deletes the location parameter of the 1st task in the results of the **`find`** command.
-
-
+  
+<!-- @@author A0138601M-->
 ### Undoing last action performed : `undo`
 Undo the last action performed in Task!t. Irreversible.<br>
 Memory supports up to five historical actions. <br>
@@ -237,7 +240,7 @@ There is no need to save manually.
 
 Command | Format  
 -------- | :-------- 
-Add | **`add`**` [task_name] [time parameter] [optional parameter 1] [optional parameter 2]...`
+Add | **`add`**` [task_name] [optional parameter 1] [optional parameter 2]...`
 Clear | **`clear`**
 Delete | **`delete`**` [index 1,index 2,...]`
 Done | **`done`**` [index 1,index 2,...]`

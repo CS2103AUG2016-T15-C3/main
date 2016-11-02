@@ -5,7 +5,7 @@ import seedu.todolist.commons.core.ComponentManager;
 import seedu.todolist.commons.core.LogsCenter;
 import seedu.todolist.logic.commands.Command;
 import seedu.todolist.logic.commands.CommandResult;
-import seedu.todolist.logic.parser.Parser;
+import seedu.todolist.logic.parser.CommandParser;
 import seedu.todolist.model.Model;
 import seedu.todolist.model.task.Notification;
 import seedu.todolist.model.task.ReadOnlyTask;
@@ -20,18 +20,23 @@ public class LogicManager extends ComponentManager implements Logic {
     private final Logger logger = LogsCenter.getLogger(LogicManager.class);
 
     private final Model model;
-    private final Parser parser;
-
+    private final CommandParser parser;
+    private final Storage storage;
+    
+    //@@author A0158963M
     public LogicManager(Model model, Storage storage) {
         this.model = model;
-        this.parser = new Parser();
+        this.storage = storage;
+        this.parser = new CommandParser();
     }
-
+    
+    
     @Override
     public CommandResult execute(String commandText) {
         logger.info("----------------[USER COMMAND][" + commandText + "]");
         Command command = parser.parseCommand(commandText);
         command.setData(model);
+        command.setStorage(storage);
         return command.execute();
     }
 

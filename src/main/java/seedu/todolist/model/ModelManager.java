@@ -4,15 +4,21 @@ import javafx.collections.transformation.FilteredList;
 import seedu.todolist.commons.core.ComponentManager;
 import seedu.todolist.commons.core.LogsCenter;
 import seedu.todolist.commons.core.UnmodifiableObservableList;
-import seedu.todolist.commons.events.model.AddressBookChangedEvent;
+import seedu.todolist.commons.events.model.ToDoListChangedEvent;
 import seedu.todolist.commons.util.StringUtil;
+<<<<<<< HEAD
 import seedu.todolist.model.task.Notification;
+=======
+import seedu.todolist.model.parser.DateParser;
+>>>>>>> b456c6b5f3fb00b81468336d6728d33af38f4464
 import seedu.todolist.model.task.ReadOnlyTask;
 import seedu.todolist.model.task.Task;
 import seedu.todolist.model.task.UniqueTaskList;
 import seedu.todolist.model.task.UniqueTaskList.TaskNotFoundException;
 import seedu.todolist.ui.MainWindow;
 
+import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.EmptyStackException;
 import java.util.Set;
@@ -26,41 +32,50 @@ import java.util.logging.Logger;
 public class ModelManager extends ComponentManager implements Model {
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
 
-    private final AddressBook addressBook;
+    private final ToDoList ToDoList;
     
     private final FilteredList<Task> filteredAllTasks;
     private final FilteredList<Task> filteredCompleteTasks;
     private final FilteredList<Task> filteredIncompleteTasks;
     private final FilteredList<Notification> notifications;
     
-    private final Stack<ReadOnlyAddressBook> addressBookHistory;
+    private final Stack<ReadOnlyToDoList> ToDoListHistory;
     
     private String currentTab;
 
     /**
-     * Initializes a ModelManager with the given AddressBook
-     * AddressBook and its variables should not be null
+     * Initializes a ModelManager with the given ToDoList
+     * ToDoList and its variables should not be null
      */
-    public ModelManager(AddressBook src, UserPrefs userPrefs) {
+    public ModelManager(ToDoList src, UserPrefs userPrefs) {
         super();
         assert src != null;
         assert userPrefs != null;
 
         logger.fine("Initializing with address book: " + src + " and user prefs " + userPrefs);
 
+<<<<<<< HEAD
         addressBook = new AddressBook(src);
         filteredAllTasks = new FilteredList<>(addressBook.getAllTasks());
         filteredCompleteTasks = new FilteredList<>(addressBook.getCompletedTasks());
         filteredIncompleteTasks = new FilteredList<>(addressBook.getIncompleteTasks());
         notifications = new FilteredList<>(addressBook.getNotifications());
         addressBookHistory = new Stack<ReadOnlyAddressBook>();
+=======
+        ToDoList = new ToDoList(src);
+        filteredAllTasks = new FilteredList<>(ToDoList.getAllTasks());
+        filteredCompleteTasks = new FilteredList<>(ToDoList.getCompletedTasks());
+        filteredIncompleteTasks = new FilteredList<>(ToDoList.getIncompleteTasks());
+        ToDoListHistory = new Stack<ReadOnlyToDoList>();
+>>>>>>> b456c6b5f3fb00b81468336d6728d33af38f4464
         currentTab = MainWindow.TAB_TASK_INCOMPLETE;
     }
 
     public ModelManager() {
-        this(new AddressBook(), new UserPrefs());
+        this(new ToDoList(), new UserPrefs());
     }
 
+<<<<<<< HEAD
     public ModelManager(ReadOnlyAddressBook initialData, UserPrefs userPrefs) {
         addressBook = new AddressBook(initialData);
         filteredAllTasks = new FilteredList<>(addressBook.getAllTasks());
@@ -68,30 +83,41 @@ public class ModelManager extends ComponentManager implements Model {
         filteredIncompleteTasks = new FilteredList<>(addressBook.getIncompleteTasks());
         notifications = new FilteredList<>(addressBook.getNotifications());
         addressBookHistory = new Stack<ReadOnlyAddressBook>();
+=======
+    public ModelManager(ReadOnlyToDoList initialData, UserPrefs userPrefs) {
+        ToDoList = new ToDoList(initialData);
+        filteredAllTasks = new FilteredList<>(ToDoList.getAllTasks());
+        filteredCompleteTasks = new FilteredList<>(ToDoList.getCompletedTasks());
+        filteredIncompleteTasks = new FilteredList<>(ToDoList.getIncompleteTasks());
+        ToDoListHistory = new Stack<ReadOnlyToDoList>();
+>>>>>>> b456c6b5f3fb00b81468336d6728d33af38f4464
         currentTab = MainWindow.TAB_TASK_INCOMPLETE;
     }
 
     @Override
-    public void resetData(ReadOnlyAddressBook newData) {
-    	addressBookHistory.push(new AddressBook(this.addressBook));
-    	addressBook.resetData(newData);
-        indicateAddressBookChanged();
+    public void resetData(ReadOnlyToDoList newData) {
+    	ToDoListHistory.push(new ToDoList(this.ToDoList));
+    	ToDoList.resetData(newData);
+        indicateToDoListChanged();
     }
 
     @Override
-    public ReadOnlyAddressBook getAddressBook() {
-        return addressBook;
+    public ReadOnlyToDoList getToDoList() {
+        return ToDoList;
     }
 
+    //@@author A0153736B
     @Override
-    public synchronized void undoAddressBook() throws EmptyStackException {
-    	addressBook.resetData(addressBookHistory.pop());
-    	indicateAddressBookChanged();
+    public synchronized void undoToDoList() throws EmptyStackException {
+    	ToDoList.resetData(ToDoListHistory.pop());
+    	updateFilteredListToShowAll();
+    	indicateToDoListChanged();
     }
+    //@@author
     
     /** Raises an event to indicate the model has changed */
-    private void indicateAddressBookChanged() {
-        raise(new AddressBookChangedEvent(addressBook));
+    private void indicateToDoListChanged() {
+        raise(new ToDoListChangedEvent(ToDoList));
     }
     
     
@@ -107,36 +133,38 @@ public class ModelManager extends ComponentManager implements Model {
     
     @Override
     public synchronized void markTask(ReadOnlyTask... tasks) throws TaskNotFoundException {
-    	AddressBook previousAddressBook = new AddressBook(this.addressBook);
-    	addressBook.markTask(tasks);
-    	addressBookHistory.push(previousAddressBook);
-        indicateAddressBookChanged();
+    	ToDoList previousToDoList = new ToDoList(this.ToDoList);
+    	ToDoList.markTask(tasks);
+    	ToDoListHistory.push(previousToDoList);
+        indicateToDoListChanged();
     }
 
     @Override
     public synchronized void deleteTask(ReadOnlyTask... tasks) throws TaskNotFoundException {
-        AddressBook previousAddressBook = new AddressBook(this.addressBook);
-    	addressBook.removeTask(tasks);
-    	addressBookHistory.push(previousAddressBook);
-        indicateAddressBookChanged();
+        ToDoList previousToDoList = new ToDoList(this.ToDoList);
+    	ToDoList.removeTask(tasks);
+    	ToDoListHistory.push(previousToDoList);
+        indicateToDoListChanged();
     }
 
     @Override
     public synchronized void addTask(Task task) throws UniqueTaskList.DuplicateTaskException {
-    	AddressBook previousAddressBook = new AddressBook(this.addressBook);
-    	addressBook.addTask(task);
-    	addressBookHistory.push(previousAddressBook);
+    	ToDoList previousToDoList = new ToDoList(this.ToDoList);
+    	ToDoList.addTask(task);
+    	ToDoListHistory.push(previousToDoList);
         updateFilteredListToShowAll();
-        indicateAddressBookChanged();
+        indicateToDoListChanged();
     }
     
     @Override
+    //@@author A0146682X
     public synchronized void editTask(ReadOnlyTask target, Task replacement) throws TaskNotFoundException {
-    	AddressBook previousAddressBook = new AddressBook(this.addressBook);
-    	addressBook.editTask(target, replacement);
-    	addressBookHistory.push(previousAddressBook);
-        indicateAddressBookChanged();
+    	ToDoList previousToDoList = new ToDoList(this.ToDoList);
+    	ToDoList.editTask(target, replacement);
+    	ToDoListHistory.push(previousToDoList);
+        indicateToDoListChanged();
     }
+    //@@author
 
     //=========== Filtered Task List Accessors ===============================================================
 
@@ -179,6 +207,11 @@ public class ModelManager extends ComponentManager implements Model {
         filteredCompleteTasks.setPredicate(expression::satisfies);
         filteredIncompleteTasks.setPredicate(expression::satisfies);
     }
+    
+    @Override
+    public void updateFilteredTaskList(String filter) throws DateTimeException {
+    	updateFilteredTaskList(new PredicateExpression(new DateQualifier(filter)));
+    }
 
     //========== Inner classes/interfaces used for filtering ==================================================
 
@@ -220,6 +253,7 @@ public class ModelManager extends ComponentManager implements Model {
             this.findType = findType;
         }
 
+        //@@author A0153736B
         @Override
         public boolean run(ReadOnlyTask task) {
             if (findType.equals("all")) {
@@ -241,11 +275,77 @@ public class ModelManager extends ComponentManager implements Model {
             			.isPresent();
             }
         }
+     	//@@author
 
         @Override
         public String toString() {
             return "name=" + String.join(", ", nameKeyWords);
         }
     }
+    
+    //@@author A0153736B
+    private class DateQualifier implements Qualifier {
+        private String dateFilter;
 
+        DateQualifier(String dateFilter) {
+            this.dateFilter = dateFilter;
+        }
+        
+        @Override
+        public boolean run(ReadOnlyTask task) throws DateTimeException {
+        	if (task.getInterval().isFloat()) {
+        		return false;
+        	}
+        	
+        	LocalDate currentDate = LocalDate.now();
+        	
+        	int currentDayOfWeek = currentDate.getDayOfWeek().getValue();
+        	LocalDate currentWeekStart = currentDate.minusDays(currentDayOfWeek);
+        	LocalDate currentWeekEnd = currentDate.plusDays(6-currentDayOfWeek);
+        	
+        	int currentDayOfMonth = currentDate.getDayOfMonth();
+        	LocalDate currentMonthStart = currentDate.minusDays(currentDayOfMonth+1);
+        	LocalDate currentMonthEnd = currentDate.plusDays(currentDate.lengthOfMonth()-currentDayOfMonth);
+        	
+        	if (task.getInterval().isDeadlineWithTime() || task.getInterval().isDeadlineWithoutTime()) {
+            	LocalDate taskEndDate = task.getInterval().getEndDate().getDate();
+            	if ("today".equals(dateFilter)) {
+                	return taskEndDate.equals(currentDate);
+                }
+                else if ("week".equals(dateFilter)) {
+                	return (!taskEndDate.isBefore(currentWeekStart) && !taskEndDate.isAfter(currentWeekEnd));
+                }
+                else if ("month".equals(dateFilter)) {
+                	return (!taskEndDate.isBefore(currentMonthStart) && !taskEndDate.isAfter(currentMonthEnd));
+                } 
+                else {
+                    LocalDate date = DateParser.parseDate(dateFilter);
+                    return taskEndDate.equals(date);
+                }
+        	}
+        	else {
+        		LocalDate taskStartDate = task.getInterval().getStartDate().getDate();
+            	LocalDate taskEndDate = task.getInterval().getEndDate().getDate();
+            	if ("today".equals(dateFilter)) {
+                	return (!taskEndDate.isBefore(currentDate) && !taskStartDate.isAfter(currentDate));
+                }
+                else if ("week".equals(dateFilter)) {
+                	return (!taskEndDate.isBefore(currentWeekStart) && !taskStartDate.isAfter(currentWeekEnd));
+                }
+                else if ("month".equals(dateFilter)) {
+                	return (!taskEndDate.isBefore(currentMonthStart) && !taskStartDate.isAfter(currentMonthEnd));
+                } 
+                else {
+                    LocalDate date = DateParser.parseDate(dateFilter);
+                	return (!taskEndDate.isBefore(date) && !taskStartDate.isAfter(date));
+                }  	
+        	}
+        }
+
+        @Override
+        public String toString() {
+            return "date=" + dateFilter;
+        }
+    }
+    
 }
