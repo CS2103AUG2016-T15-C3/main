@@ -11,7 +11,7 @@ public class SetstorageCommand extends Command{
 	public static final String COMMAND_WORD = "setstorage";
 
 	public static final String MESSAGE_USAGE = COMMAND_WORD + ": Sets the location of the storage file. \n"
-			+ "Example: " + COMMAND_WORD + " C://user/documents/todolist";
+			+ "Example: " + COMMAND_WORD + " documents/todolist";
 
 	public static final String MESSAGE_SUCCESS = "Successfully set the storage location!";
 
@@ -25,13 +25,18 @@ public class SetstorageCommand extends Command{
 	
     @Override
 	public CommandResult execute() {
-    	File file = new File(storage.getToDoListFilePath());
-    	if(file.exists()){
-    		file.delete();
-    	}
-    	storage.setFilePath(filepath);
+		File newfile = new File(filepath);
+		if (newfile.isDirectory()) {
+			File originalfile = new File(storage.getToDoListFilePath());
+			if (originalfile.exists()) {
+				originalfile.delete();
+			}
+			storage.setFilePath(filepath);
 
-    	return new CommandResult(MESSAGE_SUCCESS);
+			return new CommandResult(MESSAGE_SUCCESS);
+		}
+		else
+			return new CommandResult(MESSAGE_Invalid_Path);
 	}
 	
 
