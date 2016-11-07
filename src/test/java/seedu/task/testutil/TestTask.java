@@ -132,4 +132,9 @@ public class TestTask implements ReadOnlyTask {
         }
         return sb.toString();
     }
+
+	@Override
+	public Notification getNotification() {
+		return null;
+	}
 }
