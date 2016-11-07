@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * The main entry point to the application.
@@ -40,6 +42,8 @@ public class MainApp extends Application {
     protected Model model;
     protected Config config;
     protected UserPrefs userPrefs;
+	protected Timer timer;
+	protected final int secondInMilliseconds = 1000;
 
     public MainApp() {}
 
@@ -60,6 +64,8 @@ public class MainApp extends Application {
         logic = new LogicManager(model, storage);
 
         ui = new UiManager(logic, config, userPrefs, storage);
+        
+        timer = new Timer();
 
         initEventsCenter();
     }
@@ -160,6 +166,18 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         logger.info("Starting ToDoList " + MainApp.VERSION);
+        timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				Platform.runLater(() -> {
+					try {
+						model.sendNotifications();
+					} catch (IllegalValueException e) {
+						System.out.println("Impossible");
+					}
+				});
+			}
+		}, 0, secondInMilliseconds);
         ui.start(primaryStage);
     }
 
