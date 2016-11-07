@@ -28,11 +28,33 @@ Result: A new task will be added to the incomplete tab.
 > Time will be displayed as '9 Dec 2016' at the right hand side with with an image of an alarm clock.
 > Remarks will be displayed below the task name with a speech icon.
 ```
+
+#####Adding Task with Location
+1. Type `add task by today at home`
+```
+Result: A new task will be added to the incomplete tab.
+> location of the task is displayed underneath the date as "home" with a location icon.
+```
+
 #####Adding a float type task
 1. Type `add buy milk`
 ```
 Result: A new task will be added to the incomplete tab.
 > Float type task will be displayed after event and deadline type task.
+```
+
+#####Incorrect Command 
+1. Type `adds`
+```
+
+Result: command area turns red and display "Unknown command" message
+```
+
+##### Error of End Time Being Earlier Than Start Time
+1. Type `add task from 1800 to 1700`
+```
+
+Result: command area turns red and display "End time cannot be earlier than start time" message
 ```
 
 
