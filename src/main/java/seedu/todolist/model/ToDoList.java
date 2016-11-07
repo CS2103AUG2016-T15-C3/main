@@ -1,6 +1,7 @@
 package seedu.todolist.model;
 
 import javafx.collections.ObservableList;
+import seedu.todolist.commons.exceptions.IllegalValueException;
 import seedu.todolist.model.task.ReadOnlyTask;
 import seedu.todolist.model.task.Status;
 import seedu.todolist.model.task.Task;
@@ -15,128 +16,148 @@ import java.util.stream.Collectors;
  */
 public class ToDoList implements ReadOnlyToDoList {
 
-    private final UniqueTaskList tasks;
+	private final UniqueTaskList tasks;
 
-    {
-        tasks = new UniqueTaskList();
-    }
+	{
+		tasks = new UniqueTaskList();
+	}
 
-    public ToDoList() {}
+	public ToDoList() {}
 
-    /**
-     * Tasks are copied into this to-do list
-     */
-    public ToDoList(ReadOnlyToDoList toBeCopied) {
-        this(toBeCopied.getUniqueTaskList());
-    }
+	/**
+	 * Tasks are copied into this to-do list
+	 */
+	public ToDoList(ReadOnlyToDoList toBeCopied) {
+		this(toBeCopied.getUniqueTaskList());
+	}
 
-    /**
-     * Tasks are copied into this to-do list
-     */
-    public ToDoList(UniqueTaskList tasks) {
-        resetData(tasks.getInternalList());
-    }
+	/**
+	 * Tasks are copied into this to-do list
+	 */
+	public ToDoList(UniqueTaskList tasks) {
+		resetData(tasks.getInternalList());
+	}
 
-    public static ReadOnlyToDoList getEmptyToDoList() {
-        return new ToDoList();
-    }
+	public static ReadOnlyToDoList getEmptyToDoList() {
+		return new ToDoList();
+	}
 
-//// list overwrite operations
+	//// list overwrite operations
 
-    public ObservableList<Task> getAllTasks() {
-        return tasks.getInternalList();
-    }
-    
-    public ObservableList<Task> getIncompleteTasks() {
-        return tasks.getFilteredTaskList(Status.Type.Incomplete.toString());
-    }
-    
-    public ObservableList<Task> getCompletedTasks() {
-        return tasks.getFilteredTaskList(Status.Type.Complete.toString());
-    }
-    
-    public ObservableList<Task> getOverdueTasks() {
-        return tasks.getFilteredTaskList(Status.Type.Overdue.toString());
-    }
+	public ObservableList<Task> getAllTasks() {
+		return tasks.getInternalList();
+	}
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks.getInternalList().setAll(tasks);
-    }
+	public ObservableList<Task> getIncompleteTasks() {
+		return tasks.getFilteredTaskList(Status.Type.Incomplete.toString());
+	}
 
-    public void resetData(Collection<? extends ReadOnlyTask> newTasks) {
-        setTasks(newTasks.stream().map(Task::new).collect(Collectors.toList()));
-    }
+	public ObservableList<Task> getCompletedTasks() {
+		return tasks.getFilteredTaskList(Status.Type.Complete.toString());
+	}
 
-    public void resetData(ReadOnlyToDoList newData) {
-        resetData(newData.getTaskList());
-    }
+	public ObservableList<Task> getOverdueTasks() {
+		return tasks.getFilteredTaskList(Status.Type.Overdue.toString());
+	}
 
-//// task-level operations
+	public void setTasks(List<Task> tasks) {
+		this.tasks.getInternalList().setAll(tasks);
+	}
 
-    /**
-     * Adds a task to the to-do list.
-     */
-    public void addTask(Task p) throws UniqueTaskList.DuplicateTaskException {
-        tasks.add(p);
-    }
-    
-    //@@author A0146682X
-    /**
-     * Edits a task in the to-do list
-     */
-    public boolean editTask(ReadOnlyTask key, Task replacement) throws UniqueTaskList.TaskNotFoundException {
-        if (tasks.edit(key, replacement)) {
-            return true;
-        } else {
-            throw new UniqueTaskList.TaskNotFoundException();
-        }
-    }
-    //@author
-    
-    public boolean markTask(ReadOnlyTask... keys) throws UniqueTaskList.TaskNotFoundException {
-        if (tasks.mark(keys)) {
-            return true;
-        } else {
-            throw new UniqueTaskList.TaskNotFoundException();
-        }
-    }
+	public void resetData(Collection<? extends ReadOnlyTask> newTasks) {
+		setTasks(newTasks.stream().map(Task::new).collect(Collectors.toList()));
+	}
 
-    public boolean removeTask(ReadOnlyTask... keys) throws UniqueTaskList.TaskNotFoundException {
-        if (tasks.remove(keys)) {
-            return true;
-        } else {
-            throw new UniqueTaskList.TaskNotFoundException();
-        }
-    }
+	public void resetData(ReadOnlyToDoList newData) {
+		resetData(newData.getTaskList());
+	}
 
-//// util methods
+	//// task-level operations
 
-    @Override
-    public String toString() {
-        return tasks.getInternalList().size() + " tasks";
-        // TODO: refine later
-    }
+	/**
+	 * Adds a task to the to-do list.
+	 */
+	public void addTask(Task p) throws UniqueTaskList.DuplicateTaskException {
+		tasks.add(p);
+	}
 
-    @Override
-    public List<ReadOnlyTask> getTaskList() {
-        return Collections.unmodifiableList(tasks.getInternalList());
-    }
+	//@@author A0146682X
+	/**
+	 * Sets notification for a task in the to-do list
+	 */
+	public boolean notifyTask(ReadOnlyTask key, int bufferTime) throws UniqueTaskList.TaskNotFoundException {
+		if(tasks.setNotification(key, bufferTime)) {
+			return true;
+		}
+		else {
+			throw new UniqueTaskList.TaskNotFoundException();
+		}
+	}
 
-    @Override
-    public UniqueTaskList getUniqueTaskList() {
-        return this.tasks;
-    }
+	/**
+	 * Sends notifications for tasks
+	 * @throws IllegalValueException 
+	 */
+	public void sendNotifications() throws IllegalValueException {
+		tasks.sendNotifications();
+	}
 
-    @Override
-    public boolean equals(Object other) {
-        return other == this // short circuit if same object
-                || (other instanceof ToDoList // instanceof handles nulls
-                && this.tasks.equals(((ToDoList) other).tasks));
-    }
+	/**
+	 * Edits a task in the to-do list
+	 */
+	public boolean editTask(ReadOnlyTask key, Task replacement) throws UniqueTaskList.TaskNotFoundException {
+		if (tasks.edit(key, replacement)) {
+			return true;
+		} else {
+			throw new UniqueTaskList.TaskNotFoundException();
+		}
+	}
+	//@author
 
-    @Override
-    public int hashCode() {
-        // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(tasks);
-    }
+	public boolean markTask(ReadOnlyTask... keys) throws UniqueTaskList.TaskNotFoundException {
+		if (tasks.mark(keys)) {
+			return true;
+		} else {
+			throw new UniqueTaskList.TaskNotFoundException();
+		}
+	}
+
+	public boolean removeTask(ReadOnlyTask... keys) throws UniqueTaskList.TaskNotFoundException {
+		if (tasks.remove(keys)) {
+			return true;
+		} else {
+			throw new UniqueTaskList.TaskNotFoundException();
+		}
+	}
+
+	//// util methods
+
+	@Override
+	public String toString() {
+		return tasks.getInternalList().size() + " tasks";
+		// TODO: refine later
+	}
+
+	@Override
+	public List<ReadOnlyTask> getTaskList() {
+		return Collections.unmodifiableList(tasks.getInternalList());
+	}
+
+	@Override
+	public UniqueTaskList getUniqueTaskList() {
+		return this.tasks;
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		return other == this // short circuit if same object
+				|| (other instanceof ToDoList // instanceof handles nulls
+						&& this.tasks.equals(((ToDoList) other).tasks));
+	}
+
+	@Override
+	public int hashCode() {
+		// use this method for custom fields hashing instead of implementing your own
+		return Objects.hash(tasks);
+	}
 }

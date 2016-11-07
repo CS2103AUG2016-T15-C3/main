@@ -10,88 +10,104 @@ import java.util.Objects;
  */
 public class Task implements ReadOnlyTask {
 
-    private Name name;
-    private Interval interval;
-    private Location location;
-    private Remarks remarks;
-    private Status status;
+	private Name name;
+	private Interval interval;
+	private Location location;
+	private Remarks remarks;
+	private Status status;
+	private Notification notification;
 
-    /**
-     * Only Name field must be present and not null. Other fields can be null.
-     */
-    public Task(Name name, Interval interval, Location location, Remarks remarks, Status status) {
-        assert name != null;
-        this.name = name;
-        this.interval = interval;
-        this.location = location;
-        this.remarks = remarks;
-        
-        if (status.isIncomplete() && interval.isOver()) {
-            status = new Status(Status.Type.Overdue);
-        }
-        this.status = status;
-    }
-        
-    /**
-     * Only Name field must be present and not null. Other fields can be null. Default status is incomplete.
-     */
-    public Task(Name name, Interval interval, Location location, Remarks remarks) {
-        this(name, interval, location, remarks, new Status());
-    }
+	/**
+	 * Only Name field must be present and not null. Other fields can be null.
+	 */
+	public Task(Name name, Interval interval, Location location, Remarks remarks, Status status) {
+		assert name != null;
+		this.name = name;
+		this.interval = interval;
+		this.location = location;
+		this.remarks = remarks;
 
-    /**
-     * Copy constructor.
-     */
-    public Task(ReadOnlyTask source) {
-        this(source.getName(), source.getInterval(), source.getLocation(), source.getRemarks(), source.getStatus());
-    }
+		if (status.isIncomplete() && interval.isOver()) {
+			status = new Status(Status.Type.Overdue);
+		}
+		this.status = status;
+	}
 
-    @Override
-    public Name getName() {
-        return name;
-    }
-    
-    @Override
-    public Interval getInterval() {
-        return interval;
-    }
+	/**
+	 * Only Name field must be present and not null. Other fields can be null. Default status is incomplete.
+	 */
+	public Task(Name name, Interval interval, Location location, Remarks remarks) {
+		this(name, interval, location, remarks, new Status());
+	}
 
-    @Override
-    public Location getLocation() {
-        return location;
-    }
-    
-    @Override
-    public Remarks getRemarks() {
-    	return remarks;
-    }
-    
-    @Override
-    public Status getStatus() {
-        return status;
-    }
+	/**
+	 * Copy constructor.
+	 */
+	public Task(ReadOnlyTask source) {
+		this(source.getName(), source.getInterval(), source.getLocation(), source.getRemarks(), source.getStatus());
+	}
 
-    @Override
-    public boolean equals(Object other) {
-        return other == this // short circuit if same object
-                || (other instanceof ReadOnlyTask // instanceof handles nulls
-                && this.isSameStateAs((ReadOnlyTask) other));
-    }
+	@Override
+	public Name getName() {
+		return name;
+	}
 
-    @Override
-    public int hashCode() {
-        // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, interval, location, remarks);
-    }
+	@Override
+	public Interval getInterval() {
+		return interval;
+	}
 
-    @Override
-    public String toString() {
-        return getAsText();
-    }
+	@Override
+	public Location getLocation() {
+		return location;
+	}
 
-    @Override
-    public int compareTo(ReadOnlyTask task) {
-        return this.interval.compareTo(task.getInterval());
-    }
+	@Override
+	public Remarks getRemarks() {
+		return remarks;
+	}
+
+	@Override
+	public Status getStatus() {
+		return status;
+	}
+
+	//@@author: A014682X
+	@Override
+	public Notification getNotification() {
+		return notification;
+	}
+
+	public void setNotification(int bufferTime) {
+		this.notification = new Notification(bufferTime);
+	}
+
+	public void dismissNotification() {
+		this.notification = null;
+	}
+	//@@author
+
+	@Override
+	public boolean equals(Object other) {
+		return other == this // short circuit if same object
+				|| (other instanceof ReadOnlyTask // instanceof handles nulls
+						&& this.isSameStateAs((ReadOnlyTask) other));
+	}
+
+	@Override
+	public int hashCode() {
+		// use this method for custom fields hashing instead of implementing your own
+		return Objects.hash(name, interval, location, remarks);
+	}
+
+	@Override
+	public String toString() {
+		return getAsText();
+	}
+
+	@Override
+	public int compareTo(ReadOnlyTask task) {
+		return this.interval.compareTo(task.getInterval());
+	}
 
 }
