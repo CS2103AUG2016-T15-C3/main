@@ -39,7 +39,7 @@ public class EditCommandTest extends ToDoListGuiTest {
 		assertEditSuccess(targetIndex, partialCommand, currentList, true);
 
 		//invalid command
-		targetIndex = (currentList.getIncompleteList().length);
+		targetIndex = (currentList.getIncompleteList().length - 1);
 		partialCommand = "";
 		assertEditSuccess(targetIndex, partialCommand, currentList, true);
 	}
